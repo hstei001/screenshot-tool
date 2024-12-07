@@ -1,13 +1,17 @@
 # -*- mode: python ; coding: utf-8 -*-
+from PyInstaller.utils.hooks import collect_all
 
 block_cipher = None
+
+# Collect all numpy dependencies
+numpy_datas, numpy_binaries, numpy_hiddenimports = collect_all('numpy')
 
 a = Analysis(
     ['screenshot_app.py'],
     pathex=[],
-    binaries=[],
-    datas=[],
-    hiddenimports=[],
+    binaries=numpy_binaries,
+    datas=numpy_datas,
+    hiddenimports=numpy_hiddenimports + ['numpy.core._dtype_ctypes'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
