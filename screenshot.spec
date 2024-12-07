@@ -17,6 +17,20 @@ a = Analysis(
     cipher=block_cipher,
     noarchive=False,
 )
+
+# Remove unnecessary binary files that might trigger AV
+def remove_from_list(source, patterns):
+    for file in list(source):
+        for pattern in patterns:
+            if pattern in str(file).lower():
+                source.remove(file)
+                break
+    return source
+
+# List of patterns to remove
+patterns_to_remove = ['_test', 'test_', '.test']
+a.binaries = remove_from_list(a.binaries, patterns_to_remove)
+
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(
@@ -38,5 +52,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='whacky_icon.ico'
+    icon='whacky_icon.ico',
+    version='file_version_info.txt',
+    uac_admin=False,
 )
